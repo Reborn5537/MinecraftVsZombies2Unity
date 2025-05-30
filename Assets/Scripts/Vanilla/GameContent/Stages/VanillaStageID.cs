@@ -62,6 +62,36 @@ namespace MVZ2.GameContent.Stages
         public const string castle14 = "castle_14";
         public const string castle15 = "castle_15";
         public const string castleEndless = "castle_endless";
+
+        public const string mausoleum1 = "mausoleum_1";
+        public const string mausoleum2 = "mausoleum_2";
+        public const string mausoleum3 = "mausoleum_3";
+        public const string mausoleum4 = "mausoleum_4";
+        public const string mausoleum5 = "mausoleum_5";
+        public const string mausoleum6 = "mausoleum_6";
+        public const string mausoleum7 = "mausoleum_7";
+        public const string mausoleum8 = "mausoleum_8";
+        public const string mausoleum9 = "mausoleum_9";
+        public const string mausoleum10 = "mausoleum_10";
+        public const string mausoleum11 = "mausoleum_11";
+        public const string mausoleumEndless = "mausoleum_endless";
+
+        // Minigames
+        public const string whackAGhost = "whack_a_ghost";
+        public const string breakout = "breakout";
+        public const string bigTroubleAndLittleZombie = "big_trouble_and_little_zombie";
+
+        // Puzzles
+        public const string puzzleIZombie = "puzzle_i_zombie";
+        public const string puzzleISkeleton = "puzzle_i_skeleton";
+        public const string puzzleCanYouPassIt = "puzzle_can_you_pass_it";
+        public const string puzzleAbsoluteDefense = "puzzle_absolute_defense";
+        public const string puzzleDeadBalloon = "puzzle_dead_balloon";
+        public const string puzzleUnbreakable = "puzzle_unbreakable";
+        public const string puzzleMineclear = "puzzle_mineclear";
+        public const string puzzleFireInTheHole = "puzzle_fire_in_the_hole";
+        public const string puzzleAllYourObservesAreBelongToUs = "puzzle_all_your_observes_are_belong_to_us";
+        public const string puzzleIZombieEndless = "puzzle_i_zombie_endless";
     }
     public static class VanillaStageID
     {
@@ -89,6 +119,7 @@ namespace MVZ2.GameContent.Stages
         public static readonly NamespaceID castle13 = Get(VanillaStageNames.castle13);
         public static readonly NamespaceID castle14 = Get(VanillaStageNames.castle14);
         public static readonly NamespaceID castle15 = Get(VanillaStageNames.castle15);
+        public static readonly NamespaceID mausoleum1 = Get(VanillaStageNames.mausoleum1);
         private static NamespaceID Get(string name)
         {
             return new NamespaceID(VanillaMod.spaceName, name);

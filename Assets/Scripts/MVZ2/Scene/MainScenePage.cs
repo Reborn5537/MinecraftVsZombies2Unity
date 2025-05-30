@@ -1,16 +1,6 @@
-﻿using UnityEngine;
-
-namespace MVZ2.Scenes
+﻿namespace MVZ2.Scenes
 {
-    public class MainScenePage : MonoBehaviour
+    public class MainScenePage : ScenePage
     {
-        public virtual void Display()
-        {
-            gameObject.SetActive(true);
-        }
-        public virtual void Hide()
-        {
-            gameObject.SetActive(false);
-        }
     }
 }

@@ -2,10 +2,9 @@
 {
     public enum NumberOperator
     {
-        Add,
         Set,
-        AddMultiplie,
+        Add,
+        AddMultiple,
         Multiply,
-        ForceSet
     }
 }

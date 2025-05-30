@@ -1,15 +1,14 @@
 ﻿using MVZ2.GameContent.Buffs.Enemies;
 using MVZ2.GameContent.Buffs.Level;
 using MVZ2.GameContent.Effects;
-using MVZ2.Vanilla;
 using MVZ2.Vanilla.Audios;
 using MVZ2.Vanilla.Level;
 using MVZ2.Vanilla.Properties;
 using MVZ2.Vanilla.Saves;
 using MVZ2Logic;
 using MVZ2Logic.Level;
-using PVZEngine;
 using PVZEngine.Definitions;
+using PVZEngine.Entities;
 using PVZEngine.Level;
 using UnityEngine;
 
@@ -59,11 +58,11 @@ namespace MVZ2.GameContent.Areas
         }
         public static float GetPoolWave(LevelEngine level)
         {
-            return level.GetBehaviourField<float>(ID, PROP_POOL_WAVE);
+            return level.GetBehaviourField<float>(PROP_POOL_WAVE);
         }
         public static void SetPoolWave(LevelEngine level, float value)
         {
-            level.SetBehaviourField(ID, PROP_POOL_WAVE, value);
+            level.SetBehaviourField(PROP_POOL_WAVE, value);
         }
 
         private void UpdateNightmareOrDream(LevelEngine level)
@@ -109,7 +108,6 @@ namespace MVZ2.GameContent.Areas
                 level.SetPlayingMusic(VanillaMusicID.nightmareLevel);
             }
         }
-        private static readonly NamespaceID ID = VanillaAreaID.dream;
-        public static readonly VanillaLevelPropertyMeta PROP_POOL_WAVE = new VanillaLevelPropertyMeta("PoolWave");
+        public static readonly VanillaLevelPropertyMeta<float> PROP_POOL_WAVE = new VanillaLevelPropertyMeta<float>("PoolWave");
     }
 }

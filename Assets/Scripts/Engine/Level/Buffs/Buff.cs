@@ -32,18 +32,18 @@ namespace PVZEngine.Buffs
                 Definition.PostUpdate(this);
             }
         }
-        public T GetProperty<T>(PropertyKey name)
+        public T GetProperty<T>(PropertyKey<T> name)
         {
             return propertyDict.GetProperty<T>(name);
         }
-        public void SetProperty(PropertyKey name, object value)
+        public void SetProperty<T>(PropertyKey<T> name, T value)
         {
-            if (propertyDict.SetProperty(name, value))
+            if (propertyDict.SetProperty<T>(name, value))
             {
                 // 增益属性更改时，如果有利用该增益属性修改属性的修改器，调用一次属性更改时事件。
                 foreach (var modifier in GetModifiers())
                 {
-                    if (modifier.UsingContainerPropertyName == name)
+                    if (name.Equals(modifier.UsingContainerPropertyName))
                     {
                         CallPropertyChanged(modifier.PropertyName);
                     }
@@ -54,7 +54,7 @@ namespace PVZEngine.Buffs
         {
             return Definition.GetModifiers();
         }
-        public PropertyModifier[] GetModifiers(PropertyKey propName)
+        public PropertyModifier[] GetModifiers(IPropertyKey propName)
         {
             return Definition.GetModifiers(propName);
         }
@@ -81,7 +81,7 @@ namespace PVZEngine.Buffs
             Target = target;
             foreach (var modifier in GetModifiers())
             {
-                modifier.PostAdd(this);
+                modifier.PostAdd(this, target);
             }
             auras.PostAdd();
             Definition.PostAdd(this);
@@ -92,11 +92,11 @@ namespace PVZEngine.Buffs
                 return;
             foreach (var modifier in GetModifiers())
             {
-                modifier.PostRemove(this);
+                modifier.PostRemove(this, Target);
             }
             auras.PostRemove();
-            Target = null;
             Definition.PostRemove(this);
+            Target = null;
         }
         public void Remove()
         {
@@ -124,12 +124,12 @@ namespace PVZEngine.Buffs
             return buff;
         }
         LevelEngine IAuraSource.GetLevel() { return Level; }
-        object IModifierContainer.GetProperty(PropertyKey name) => GetProperty<object>(name);
-        private void CallPropertyChanged(PropertyKey name)
+        T IModifierContainer.GetProperty<T>(PropertyKey<T> name) => GetProperty<T>(name);
+        private void CallPropertyChanged(IPropertyKey name)
         {
             OnPropertyChanged?.Invoke(name);
         }
-        public event Action<PropertyKey> OnPropertyChanged;
+        public event Action<IPropertyKey> OnPropertyChanged;
         public long ID { get; }
         public LevelEngine Level { get; }
         public BuffDefinition Definition { get; }

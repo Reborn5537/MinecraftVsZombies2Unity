@@ -8,6 +8,10 @@ namespace PVZEngine.Damages
         {
             this.effects = effects;
         }
+        public NamespaceID[] GetEffects()
+        {
+            return effects;
+        }
         public bool HasEffect(NamespaceID effect)
         {
             return effects.Contains(effect);

@@ -165,8 +165,8 @@ namespace MVZ2.GameContent.Contraptions
         private bool IsValidTargetType(Entity target) =>
             target.Type == EntityTypes.ENEMY || target.Type == EntityTypes.OBSTACLE;
 
-        private static readonly VanillaEntityPropertyMeta PROP_TRACKING_MARKER =
-            new VanillaEntityPropertyMeta("IsTrackingArrow");
+        private static readonly VanillaEntityPropertyMeta<bool> PROP_TRACKING_MARKER =
+            new VanillaEntityPropertyMeta<bool>("IsTrackingArrow");
 
         public static FrameTimer GetEvocationTimer(Entity entity) =>
             entity.GetBehaviourField<FrameTimer>(ID, PROP_EVOCATION_TIMER);
@@ -175,7 +175,7 @@ namespace MVZ2.GameContent.Contraptions
             entity.SetBehaviourField(ID, PROP_EVOCATION_TIMER, timer);
 
         private static readonly NamespaceID ID = VanillaContraptionID.snipedispenser;
-        public static readonly VanillaEntityPropertyMeta PROP_EVOCATION_TIMER =
-            new VanillaEntityPropertyMeta("EvocationTimer");
+        public static readonly VanillaEntityPropertyMeta<FrameTimer> PROP_EVOCATION_TIMER =
+            new VanillaEntityPropertyMeta<FrameTimer>("EvocationTimer");
     }
 }

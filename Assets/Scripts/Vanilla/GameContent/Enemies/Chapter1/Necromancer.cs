@@ -160,8 +160,7 @@ namespace MVZ2.GameContent.Enemies
                 var z = entity.Position.z + level.GetGridHeight() * i * 0.5f;
                 var y = level.GetGroundY(x, z);
                 Vector3 wallPos = new Vector3(x, y, z);
-                var boneWall = level.Spawn(VanillaEnemyID.boneWall, wallPos, entity);
-                boneWall.SetFactionAndDirection(entity.GetFaction());
+                entity.SpawnWithParams(VanillaEnemyID.boneWall, wallPos);
             }
         }
         #region 常量
@@ -170,8 +169,8 @@ namespace MVZ2.GameContent.Enemies
         private const int BUILD_DETECT_TIME = 30;
         private const int MAX_BONE_WALL_COUNT = 15;
         public static readonly NamespaceID ID = VanillaEnemyID.necromancer;
-        public static readonly VanillaEntityPropertyMeta PROP_STATE_TIMER = new VanillaEntityPropertyMeta("StateTimer");
-        public static readonly VanillaEntityPropertyMeta PROP_CASTING = new VanillaEntityPropertyMeta("Casting");
+        public static readonly VanillaEntityPropertyMeta<FrameTimer> PROP_STATE_TIMER = new VanillaEntityPropertyMeta<FrameTimer>("StateTimer");
+        public static readonly VanillaEntityPropertyMeta<bool> PROP_CASTING = new VanillaEntityPropertyMeta<bool>("Casting");
         #endregion 常量
     }
 }

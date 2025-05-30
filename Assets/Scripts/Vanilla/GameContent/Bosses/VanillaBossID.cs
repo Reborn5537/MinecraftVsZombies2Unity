@@ -12,6 +12,8 @@ namespace MVZ2.GameContent.Bosses
         public const string wither = "wither";
         public const string rebornslenderman = "rebornslenderman";
         public const string rebornnightmareaper = "rebornnightmareaper";
+        public const string theGiant = "the_giant";
+        public const string theGiantSnakeTail = "the_giant_snake_tail";
     }
     public static class VanillaBossID
     {
@@ -22,6 +24,8 @@ namespace MVZ2.GameContent.Bosses
         public static readonly NamespaceID wither = Get(VanillaBossNames.wither);
         public static readonly NamespaceID rebornslenderman = Get(VanillaBossNames.rebornslenderman);
         public static readonly NamespaceID rebornnightmareaper = Get(VanillaBossNames.rebornnightmareaper);
+        public static readonly NamespaceID theGiant = Get(VanillaBossNames.theGiant);
+        public static readonly NamespaceID theGiantSnakeTail = Get(VanillaBossNames.theGiantSnakeTail);
         private static NamespaceID Get(string name)
         {
             return new NamespaceID(VanillaMod.spaceName, name);

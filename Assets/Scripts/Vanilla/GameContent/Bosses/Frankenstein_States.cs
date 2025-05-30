@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using MVZ2.GameContent.Buffs.Contraptions;
 using MVZ2.GameContent.Buffs.Enemies;
 using MVZ2.GameContent.Contraptions;
 using MVZ2.GameContent.Damages;
@@ -16,7 +15,6 @@ using UnityEngine;
 using MVZ2.Vanilla.Properties;
 using PVZEngine;
 using PVZEngine.Level;
-using PVZEngine.Triggers;
 
 namespace MVZ2.GameContent.Bosses
 {
@@ -410,7 +408,7 @@ namespace MVZ2.GameContent.Bosses
 
                 Vector3 armRootPosition = boss.Position + outerArmRootOffset;
                 var missileDirection = GetMissileDirection(boss);
-                Vector3 missilePosition = armRootPosition + missileDirection * 100f;
+                Vector3 missilePosition = armRootPosition + missileDirection * 120f;
                 float missileSpeed = boss.GetShotVelocity().magnitude * 0.8f;
 
                 var missile = boss.ShootProjectile(new ShootParams()
@@ -431,7 +429,7 @@ namespace MVZ2.GameContent.Bosses
             {
                 base.OnEnter(stateMachine, entity);
                 var substateTimer = stateMachine.GetSubStateTimer(entity);
-                substateTimer.ResetTime(20);//快速跑路
+                substateTimer.ResetTime(20);
             }
             public override void OnUpdateAI(EntityStateMachine stateMachine, Entity entity)
             {
@@ -455,7 +453,11 @@ namespace MVZ2.GameContent.Bosses
                             pos.z = pos.z * 0.8f + target.z * 0.2f;
                             entity.Position = pos;
 
-                            entity.Level.Spawn(VanillaEffectID.frankensteinJumpTrail, entity.GetCenter(), entity);
+                            var spawnParam = entity.GetSpawnParams();
+                            spawnParam.SetProperty(EngineEntityProps.FLIP_X, entity.IsFlipX());
+                            spawnParam.SetProperty(EngineEntityProps.SCALE, entity.GetScale());
+                            spawnParam.SetProperty(EngineEntityProps.DISPLAY_SCALE, entity.GetDisplayScale());
+                            entity.Level.Spawn(VanillaEffectID.frankensteinJumpTrail, entity.GetCenter(), entity, spawnParam);
                             if (entity.GetRelativeY() <= 0)
                             {
                                 Land(stateMachine, entity);
@@ -521,7 +523,7 @@ namespace MVZ2.GameContent.Bosses
                 {
                     if (boss.IsFacingLeft())
                     {
-                        column = boss.RNG.Next(maxColumn - 5, maxColumn);
+                        column = boss.RNG.Next(maxColumn - 6, maxColumn);
                     }
                     else
                     {
@@ -536,7 +538,7 @@ namespace MVZ2.GameContent.Bosses
                 if (boss.IsFacingLeft())
                 {
                     var target = targetLaneGroup.OrderByDescending(e => e.GetColumn()).FirstOrDefault();
-                    column = Mathf.Clamp(target.GetColumn() + 1, maxColumn - 5, maxColumn - 1);
+                    column = Mathf.Clamp(target.GetColumn() + 1, maxColumn - 6, maxColumn - 1);
                     lane = target.GetLane();
                 }
                 else
@@ -654,8 +656,7 @@ namespace MVZ2.GameContent.Bosses
                 {
                     if (contraption.IsEntityOf(VanillaContraptionID.tnt))
                     {
-                        contraption.ShortCircuit(5); 
-                        contraption.AddBuff<TNTChargedBuff>();
+                        TNT.Charge(contraption);
                         var arc = level.Spawn(VanillaEffectID.electricArc, boss.Position + outerArmRootOffset + Vector3.left * 100, boss);
                         ElectricArc.Connect(arc, contraption.Position);
                         ElectricArc.UpdateArc(arc);

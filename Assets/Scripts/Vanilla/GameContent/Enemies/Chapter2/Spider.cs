@@ -11,7 +11,6 @@ using UnityEngine;
 using MVZ2.GameContent.Effects;
 using MVZ2.GameContent.Projectiles;
 using MVZ2.Vanilla.Audios;
-using PVZEngine.Triggers;
 using Tools;
 using MVZ2.GameContent.Contraptions;
 using MVZ2.GameContent.Damages;
@@ -89,7 +88,7 @@ namespace MVZ2.GameContent.Enemies
         }
         public override void PostCollision(EntityCollision collision, int state)
         {
-            if (collision.Collider.IsMain() && collision.OtherCollider.IsMain())
+            if (collision.Collider.IsForMain() && collision.OtherCollider.IsForMain())
             {
                 var enemy = collision.Entity;
                 var other = collision.Other;
@@ -147,15 +146,21 @@ namespace MVZ2.GameContent.Enemies
         {
             if (target == null || !target.Exists() || target.IsDead)
                 return false;
+            if (!enemy.IsHostile(target))
+                return false;
             //if (!enemy.IsHostile(target))
                 //return false;
             if (!Detection.IsInSameRow(enemy, target))
+                return false;
+            if (!Detection.CanDetect(target))
+                return false;
+            if (target.Type != EntityTypes.PLANT)
                 return false;
             //if (!Detection.CanDetect(target))
             //return false;
             //if (target.Type != EntityTypes.PLANT)//让我们试试爬正邪()
             //return true;
-            if (target.IsFloor() || !target.IsDefensive())
+            if (target.IsFloor() || !target.IsDefensive() || target.NoClimb())
                 return false;
             if (target.IsEntityOf(VanillaContraptionID.goldenApple))
                 return true;
@@ -178,6 +183,6 @@ namespace MVZ2.GameContent.Enemies
             spider.SetBehaviourField(ID, PROP_CLIMB_TARGET_ID, new EntityID(value));
         }
         public static readonly NamespaceID ID = VanillaEnemyID.spider;
-        public static readonly VanillaEntityPropertyMeta PROP_CLIMB_TARGET_ID = new VanillaEntityPropertyMeta("ClimbTargetID");
+        public static readonly VanillaEntityPropertyMeta<EntityID> PROP_CLIMB_TARGET_ID = new VanillaEntityPropertyMeta<EntityID>("ClimbTargetID");
     }
 }

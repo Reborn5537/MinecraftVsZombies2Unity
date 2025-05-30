@@ -8,7 +8,6 @@ using MVZ2.Vanilla;
 using MVZ2.Vanilla.Detections;
 using MVZ2.Vanilla.Entities;
 using MVZ2Logic;
-using MVZ2Logic.Models;
 using PVZEngine.Auras;
 using PVZEngine.Buffs;
 using PVZEngine.Entities;
@@ -24,11 +23,6 @@ namespace MVZ2.GameContent.Contraptions
         {
             AddAura(new GravityAura());
             projectileDetector = new GravityPadDetector(false, AFFECT_HEIGHT);
-        }
-        public override void Init(Entity entity)
-        {
-            base.Init(entity);
-            entity.SetSortingLayer(SortingLayers.carriers);
         }
         protected override void UpdateAI(Entity entity)
         {
@@ -62,8 +56,7 @@ namespace MVZ2.GameContent.Contraptions
                     ArtifactPickup.SetArtifactID(lantern, VanillaArtifactID.brokenLantern);
                 }
             }
-            var anvil = level.Spawn(VanillaContraptionID.anvil, pos, entity);
-            anvil.SetFactionAndDirection(entity.GetFaction());
+            var anvil = entity.SpawnWithParams(VanillaContraptionID.anvil, pos);
         }
         public const float AFFECT_HEIGHT = 64;
         public const float MIN_HEIGHT = 5;

@@ -5,12 +5,14 @@ using MVZ2.GameContent.Damages;
 using MVZ2.GameContent.Effects;
 using MVZ2.GameContent.Projectiles;
 using MVZ2.Vanilla.Audios;
+using MVZ2.Vanilla.Callbacks;
 using MVZ2.Vanilla.Entities;
 using MVZ2.Vanilla.Grids;
 using MVZ2.Vanilla.Level;
 using MVZ2.Vanilla.Properties;
 using MVZ2Logic.Level;
 using PVZEngine;
+using PVZEngine.Callbacks;
 using PVZEngine.Damages;
 using PVZEngine.Entities;
 using PVZEngine.Grids;
@@ -30,11 +32,16 @@ namespace MVZ2.GameContent.Contraptions
         {
             base.Init(entity);
 
+            entity.CollisionMaskHostile |= EntityCollisionHelper.MASK_ENEMY;
+
             var riseTimer = new FrameTimer(400);
             SetRiseTimer(entity, riseTimer);
+            if (entity.Level.IsIZombie())
+            {
+                riseTimer.Frame = 0;
+            }
             entity.SetAnimationBool("Ready", riseTimer.Frame < 30);
 
-            entity.CollisionMaskHostile |= EntityCollisionHelper.MASK_ENEMY;
         }
         protected override void UpdateAI(Entity entity)
         {
@@ -56,7 +63,7 @@ namespace MVZ2.GameContent.Contraptions
                 for (int y = 0; y < entity.Level.GetMaxLaneCount(); y++)
                 {
                     var grid = entity.Level.GetGrid(x, y);
-                    if (grid.CanPlaceOrStackEntity(VanillaContraptionID.mineTNT))
+                    if (grid.CanSpawnEntity(VanillaContraptionID.mineTNT))
                     {
                         grids.Add(grid);
                     }
@@ -110,17 +117,18 @@ namespace MVZ2.GameContent.Contraptions
             if (!self.IsHostile(other))
                 return;
             var otherCollider = collision.OtherCollider;
-            if (!otherCollider.IsMain())
+            if (!otherCollider.IsForMain())
                 return;
             var riseTimer = GetRiseTimer(self);
             if (riseTimer == null || !riseTimer.Expired)
                 return;
             var damageEffects = new DamageEffectList(VanillaDamageEffects.MUTE, VanillaDamageEffects.IGNORE_ARMOR, VanillaDamageEffects.REMOVE_ON_DEATH, VanillaDamageEffects.EXPLOSION);
-            self.Level.Explode(self.Position, self.GetRange(), self.GetFaction(), self.GetDamage(), damageEffects, self);
+            self.Explode(self.Position, self.GetRange(), self.GetFaction(), self.GetDamage(), damageEffects);
             self.Level.Spawn(VanillaEffectID.mineDebris, self.Position, self);
             self.Remove();
             self.PlaySound(VanillaSoundID.mineExplode);
             self.Level.ShakeScreen(10, 0, 15);
+            self.Level.Triggers.RunCallbackFiltered(VanillaLevelCallbacks.POST_CONTRAPTION_DETONATE, new EntityCallbackParams(self), self.GetDefinitionID());
         }
         private static Entity FireSeed(Entity contraption, LawnGrid grid)
         {
@@ -138,6 +146,6 @@ namespace MVZ2.GameContent.Contraptions
             return seed;
         }
         private static readonly NamespaceID ID = VanillaContraptionID.mineTNT;
-        private static readonly VanillaEntityPropertyMeta PROP_RISE_TIMER = new VanillaEntityPropertyMeta("RiseTimer");
+        private static readonly VanillaEntityPropertyMeta<FrameTimer> PROP_RISE_TIMER = new VanillaEntityPropertyMeta<FrameTimer>("RiseTimer");
     }
 }

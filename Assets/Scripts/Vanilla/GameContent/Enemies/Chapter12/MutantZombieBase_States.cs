@@ -157,7 +157,7 @@ namespace MVZ2.Vanilla.Enemies
             }
             public const int SUBSTATE_START = 0;
             public const int SUBSTATE_ATTACKED = 1;
-            private List<EntityCollider> detectBuffer = new List<EntityCollider>();
+            private List<IEntityCollider> detectBuffer = new List<IEntityCollider>();
         }
         #endregion
 
@@ -201,9 +201,8 @@ namespace MVZ2.Vanilla.Enemies
 
                             var impPos = entity.Position + new Vector3(entity.GetFacingX() * 24, 155, 0);
                             var impVel = new Vector3(entity.GetFacingX() * 20, 0, 0);
-                            var imp = entity.Spawn(VanillaEnemyID.imp, impPos);
+                            var imp = entity.SpawnWithParams(VanillaEnemyID.imp, impPos);
                             imp.PlaySound(VanillaSoundID.impLaugh);
-                            imp.SetFactionAndDirection(entity.GetFaction());
                             imp.Velocity = impVel;
 
                             subStateTimer.ResetTime(10);
@@ -255,11 +254,13 @@ namespace MVZ2.Vanilla.Enemies
                     case SUBSTATE_DROP:
                         if (subStateTimer.Expired)
                         {
-                            var smoke = entity.Spawn(VanillaEffectID.smoke, entity.Position);
-                            smoke.SetSize(entity.GetSize());
-                            entity.Remove();
+                            entity.FaintRemove();
                         }
                         break;
+                }
+                if (!entity.IsDead)
+                {
+                    stateMachine.StartState(entity, STATE_IDLE);
                 }
             }
             public const int SUBSTATE_START = 0;
